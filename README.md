@@ -72,5 +72,5 @@ export default defineConfig([
 ])
 ```
 ```
-add auto version
+add auto version test
 ```
