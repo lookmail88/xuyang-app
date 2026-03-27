@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: xuyang-app-dev
+  name: xuyang-app
   namespace: xgao-dev
 spec:
   replicas: 1
@@ -18,5 +18,6 @@ spec:
       containers:
         - name: app
           image: ghcr.io/lookmail88/xuyang-app:v0.0.1
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
