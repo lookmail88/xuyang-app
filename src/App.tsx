@@ -97,12 +97,6 @@ function App() {
               }`}>
                 {loading ? 'loading…' : error ? 'error' : '200 OK'}
               </span>
-              {refreshing && (
-                <svg className="animate-spin w-3 h-3 ml-1" style={{ color: '#054ADA' }} viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                </svg>
-              )}
             </div>
             <div className="px-5 py-6 font-mono text-sm text-left min-h-[80px] flex items-center">
               {loading && (
@@ -116,6 +110,7 @@ function App() {
               )}
               {!loading && error && <span className="text-red-500">{error}</span>}
               {!loading && !error && <span style={{ color: '#061122' }}>{response}</span>}
+              {refreshing && !loading && <span className="ml-2 text-xs opacity-40" style={{ color: '#054ADA' }}>refreshing…</span>}
             </div>
           </div>
         </div>
