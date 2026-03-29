@@ -3,9 +3,11 @@ name: Build Push and Release to GHCR
 on:
   push:
     branches: [ "development" ]  # 监听 development 分支的推送
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -14,27 +16,37 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Check out the repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      # 1. 自动计算并推送新 Tag (v1.0.1, v1.0.2...)
+
+      # 1. 自动根据 semantic commit 计算并推送新 Tag
+      #    feat:           → minor bump (e.g. v1.1.0)
+      #    fix: / chore:   → patch bump (e.g. v1.0.1)
+      #    BREAKING CHANGE → major bump (e.g. v2.0.0)
       - name: Bump version and push tag
         id: tag_version
         uses: anothrNick/github-tag-action@1.67.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          DEFAULT_BUMP: patch # 默认每次增加修订号
-      # 2. 设置 Docker Buildx (用于构建镜像)
+          DEFAULT_BUMP: patch
+          MINOR_STRING_BUMP: "feat:"
+          MAJOR_STRING_BUMP: "BREAKING CHANGE"
+          RELEASE_BRANCHES: development
+
+      # 2. 设置 Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      #3. 登录到 GitHub Container Registry
+
+      # 3. 登录到 GitHub Container Registry
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       # 4. 构建并推送镜像
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -43,9 +55,10 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{  steps.tag_version.outputs.new_tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       - name: Output Release Info
         run: |
           echo "Successfully released version: ${{ steps.tag_version.outputs.new_tag }}"
