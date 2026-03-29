@@ -68,6 +68,7 @@ function App() {
           <span className={`w-2 h-2 rounded-full animate-pulse mt-1 shrink-0 ${loading ? 'bg-yellow-400' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
           <div className="flex flex-col">
             <span>{loading ? 'Checking API…' : error ? 'API Unreachable' : 'API Connected'}</span>
+            {!loading && lastRefresh && <span className="text-xs opacity-60">Last Check: {lastRefresh}</span>}
             {!loading && <span className="text-xs opacity-60">Next check in {countdown}s</span>}
           </div>
         </div>
