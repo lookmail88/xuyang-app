@@ -9,11 +9,12 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [timestamp, setTimestamp] = useState<string | null>(null)
 
-  useEffect(() => {
+  const checkApi = () => {
     fetch('https://api-dev.xuyang.dev/xuyang-api/sayhello')
       .then((res) => res.text())
       .then((data) => {
         setResponse(data)
+        setError(null)
         setTimestamp(new Date().toLocaleTimeString())
         setLoading(false)
       })
@@ -22,6 +23,12 @@ function App() {
         setTimestamp(new Date().toLocaleTimeString())
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    checkApi()
+    const interval = setInterval(checkApi, 30000)
+    return () => clearInterval(interval)
   }, [])
 
   return (
