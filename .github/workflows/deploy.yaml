@@ -59,6 +59,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # 5. 更新 k8s manifest 中的镜像版本，触发 ArgoCD 自动同步
+      - name: Update k8s deployment image tag
+        run: |
+          sed -i "s|image: ghcr.io/lookmail88/xuyang-app:.*|image: ghcr.io/lookmail88/xuyang-app:${{ steps.tag_version.outputs.new_tag }}|" k8s/dev/development.yaml
+
+      - name: Commit and push updated manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/dev/development.yaml
+          git commit -m "chore: update image tag to ${{ steps.tag_version.outputs.new_tag }}"
+          git push origin development
+
       - name: Output Release Info
         run: |
           echo "Successfully released version: ${{ steps.tag_version.outputs.new_tag }}"
