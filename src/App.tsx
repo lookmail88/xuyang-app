@@ -41,10 +41,12 @@ function App() {
 
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
-        <div className="inline-flex items-center gap-2 rounded-sm px-4 py-1.5 text-sm mb-8 border" style={{ backgroundColor: 'rgba(255,209,0,0.15)', borderColor: '#FFD100', color: '#061122' }}>
-          <span className={`w-2 h-2 rounded-full animate-pulse ${loading ? 'bg-yellow-400' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
-          {loading ? 'Checking API…' : error ? 'API Unreachable' : 'API Connected'}
-          {!loading && timestamp && <span className="text-xs opacity-60">({timestamp})</span>}
+        <div className="inline-flex items-start gap-2 rounded-sm px-4 py-2 text-sm mb-8 border" style={{ backgroundColor: 'rgba(255,209,0,0.15)', borderColor: '#FFD100', color: '#061122' }}>
+          <span className={`w-2 h-2 rounded-full animate-pulse mt-1 shrink-0 ${loading ? 'bg-yellow-400' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
+          <div className="flex flex-col">
+            <span>{loading ? 'Checking API…' : error ? 'API Unreachable' : 'API Connected'}</span>
+            {!loading && timestamp && <span className="text-xs opacity-60">({timestamp})</span>}
+          </div>
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6" style={{ color: '#061122' }}>
