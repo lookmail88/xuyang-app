@@ -39,7 +39,7 @@ function App() {
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
         <div className="inline-flex items-center gap-2 rounded-sm px-4 py-1.5 text-sm mb-8 border" style={{ backgroundColor: 'rgba(255,209,0,0.15)', borderColor: '#FFD100', color: '#061122' }}>
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#054ADA' }}></span>
+          <span className="w-2 h-2 rounded-full animate-pulse bg-green-500"></span>
           API Connected
         </div>
 
