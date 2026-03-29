@@ -9,6 +9,7 @@ function App() {
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [countdown, setCountdown] = useState(30)
+  const [lastRefresh, setLastRefresh] = useState<string | null>(null)
 
   const checkApi = (isInitial = false) => {
     if (isInitial) setLoading(true)
@@ -21,12 +22,14 @@ function App() {
         setLoading(false)
         setRefreshing(false)
         setCountdown(30)
+        setLastRefresh(new Date().toLocaleTimeString())
       })
       .catch((err) => {
         setError(err.message)
         setLoading(false)
         setRefreshing(false)
         setCountdown(30)
+        setLastRefresh(new Date().toLocaleTimeString())
       })
   }
 
@@ -109,8 +112,12 @@ function App() {
                 </div>
               )}
               {!loading && error && <span className="text-red-500">{error}</span>}
-              {!loading && !error && <span style={{ color: '#061122' }}>{response}</span>}
-              {refreshing && !loading && <span className="ml-2 text-xs opacity-40" style={{ color: '#054ADA' }}>refreshing…</span>}
+              {!loading && !error && (
+                <div className="flex flex-col gap-1">
+                  {lastRefresh && <span className="text-xs opacity-50" style={{ color: '#054ADA' }}>Last Refresh: {lastRefresh}{refreshing && ' — refreshing…'}</span>}
+                  <span style={{ color: '#061122' }}>{response}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
