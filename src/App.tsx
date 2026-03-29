@@ -61,7 +61,7 @@ function App() {
         </h1>
 
         <p className="text-lg max-w-md mb-12" style={{ color: '#054ADA' }}>
-          A modern, fast web application powered by React 19 and Vite 8.
+          {loading ? 'Fetching…' : error ? 'Could not reach API' : response}
         </p>
 
         <div className="flex gap-4 flex-wrap justify-center mb-20">
