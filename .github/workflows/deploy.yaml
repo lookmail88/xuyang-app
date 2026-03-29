@@ -64,12 +64,18 @@ jobs:
         run: |
           sed -i "s|image: ghcr.io/lookmail88/xuyang-app:.*|image: ghcr.io/lookmail88/xuyang-app:${{ steps.tag_version.outputs.new_tag }}|" k8s/dev/development.yaml
 
-      - name: Commit and push updated manifest
+      # 6. 更新 package.json 中的版本号（去掉 v 前缀）
+      - name: Update package.json version
+        run: |
+          VERSION=${{ steps.tag_version.outputs.new_tag }}
+          npm version ${VERSION#v} --no-git-tag-version
+
+      - name: Commit and push updated manifest and package.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add k8s/dev/development.yaml
-          git commit -m "chore: update image tag to ${{ steps.tag_version.outputs.new_tag }}"
+          git add k8s/dev/development.yaml package.json package-lock.json
+          git commit -m "chore: update image tag and version to ${{ steps.tag_version.outputs.new_tag }}"
           git push origin development
 
       - name: Output Release Info
