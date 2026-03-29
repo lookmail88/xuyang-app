@@ -51,20 +51,10 @@ function App() {
 
         <div className="flex gap-4 flex-wrap justify-center mb-20">
           <a
-            href="https://react.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-5 py-3 text-sm font-medium transition-all hover:border-purple-500/50"
+            href="#"
+            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 rounded-xl px-8 py-3 text-sm font-medium transition-all"
           >
-            React 19 Docs
-          </a>
-          <a
-            href="https://vite.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 rounded-xl px-5 py-3 text-sm font-medium transition-all"
-          >
-            Explore Vite
+            Dashboard
           </a>
         </div>
 
