@@ -7,7 +7,7 @@ function App() {
   const [response, setResponse] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [timestamp, setTimestamp] = useState<string | null>(null)
+  const [countdown, setCountdown] = useState(30)
 
   const checkApi = () => {
     fetch('https://api-dev.xuyang.dev/xuyang-api/sayhello')
@@ -15,13 +15,13 @@ function App() {
       .then((data) => {
         setResponse(data)
         setError(null)
-        setTimestamp(new Date().toLocaleTimeString())
         setLoading(false)
+        setCountdown(30)
       })
       .catch((err) => {
         setError(err.message)
-        setTimestamp(new Date().toLocaleTimeString())
         setLoading(false)
+        setCountdown(30)
       })
   }
 
@@ -30,6 +30,14 @@ function App() {
     const interval = setInterval(checkApi, 30000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    if (loading) return
+    const tick = setInterval(() => {
+      setCountdown((c) => (c > 0 ? c - 1 : 0))
+    }, 1000)
+    return () => clearInterval(tick)
+  }, [loading, response, error])
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F4F4F4', color: '#061122' }}>
@@ -52,7 +60,7 @@ function App() {
           <span className={`w-2 h-2 rounded-full animate-pulse mt-1 shrink-0 ${loading ? 'bg-yellow-400' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
           <div className="flex flex-col">
             <span>{loading ? 'Checking API…' : error ? 'API Unreachable' : 'API Connected'}</span>
-            {!loading && timestamp && <span className="text-xs opacity-60">({timestamp})</span>}
+            {!loading && <span className="text-xs opacity-60">Next check in {countdown}s</span>}
           </div>
         </div>
 
