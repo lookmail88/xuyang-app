@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './App.css'
 
 function App() {
+  const navigate = useNavigate()
   const [response, setResponse] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -50,12 +52,12 @@ function App() {
         </p>
 
         <div className="flex gap-4 flex-wrap justify-center mb-20">
-          <a
-            href="#"
+          <button
+            onClick={() => navigate('/dashboard')}
             className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 rounded-xl px-8 py-3 text-sm font-medium transition-all"
           >
             Dashboard
-          </a>
+          </button>
         </div>
 
         {/* API Response */}
