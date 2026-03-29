@@ -10,7 +10,7 @@ function App() {
   const [countdown, setCountdown] = useState(30)
 
   const checkApi = () => {
-    fetch('https://api-dev.xuyang.dev/xuyang-api/sayhello')
+    fetch('https://api-dev.xuyang.dev/xuyang-api/health')
       .then((res) => res.text())
       .then((data) => {
         setResponse(data)
@@ -87,7 +87,7 @@ function App() {
           <div className="border rounded-sm overflow-hidden" style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' }}>
             <div className="flex items-center gap-2 px-5 py-3 border-b" style={{ borderColor: '#E0E0E0', backgroundColor: '#F4F4F4' }}>
               <span className="text-xs font-mono" style={{ color: '#054ADA' }}>GET</span>
-              <span className="text-xs font-mono flex-1 truncate" style={{ color: '#061122' }}>https://api-dev.xuyang.dev/xuyang-api/sayhello</span>
+              <span className="text-xs font-mono flex-1 truncate" style={{ color: '#061122' }}>https://api-dev.xuyang.dev/xuyang-api/health</span>
               <span className={`text-xs px-2 py-0.5 rounded-sm font-medium ${
                 loading ? 'bg-yellow-100 text-yellow-700' :
                 error ? 'bg-red-100 text-red-600' :
