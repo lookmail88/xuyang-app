@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StarField from './StarField'
+import { API } from './api'
 import './App.css'
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
   const checkApi = (isInitial = false) => {
     if (isInitial) setLoading(true)
     else setRefreshing(true)
-    fetch('https://api-dev.xuyang.dev/xuyang-api/health')
+    fetch(API.health)
       .then((res) => res.text())
       .then((data) => {
         setResponse(data)
@@ -95,7 +96,7 @@ function App() {
           <div className="border rounded-sm overflow-hidden" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)' }}>
             <div className="flex items-center gap-2 px-5 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.03)' }}>
               <span className="text-xs font-mono" style={{ color: '#FFD100' }}>GET</span>
-              <span className="text-xs font-mono flex-1 truncate text-slate-400">https://api-dev.xuyang.dev/xuyang-api/health</span>
+              <span className="text-xs font-mono flex-1 truncate text-slate-400">{API.health}</span>
               <span className={`text-xs px-2 py-0.5 rounded-sm font-medium ${
                 loading ? 'bg-yellow-500/20 text-yellow-300' :
                 error ? 'bg-red-500/20 text-red-300' :

@@ -1,8 +1,17 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API } from './api'
+
+interface ArgoApp {
+  name: string
+  namespace: string
+  syncStatus: string
+  healthStatus: string
+  lastSyncTime: string
+}
 
 const stats = [
-  { label: 'Total Users', value: '12,430', change: '+12%', up: true },
-  { label: 'Active Sessions', value: '1,893', change: '+5%', up: true },
+  { label: 'Active Sessions', value: '1,893', change: '+12%', up: true },
   { label: 'Revenue', value: '$48,200', change: '+8%', up: true },
   { label: 'Error Rate', value: '0.4%', change: '-2%', up: false },
 ]
@@ -15,8 +24,32 @@ const activity = [
   { user: 'Eva Park', action: 'Merged pull request #87', time: '5h ago' },
 ]
 
+function timeAgo(iso: string) {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
+  if (diff < 60) return `${diff}s ago`
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+  return `${Math.floor(diff / 86400)}d ago`
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [argoApps, setArgoApps] = useState<ArgoApp[]>([])
+  const [argoLoading, setArgoLoading] = useState(true)
+  const [argoError, setArgoError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch(API.argoApps)
+      .then((res) => res.json())
+      .then((data) => {
+        setArgoApps(data)
+        setArgoLoading(false)
+      })
+      .catch((err) => {
+        setArgoError(err.message)
+        setArgoLoading(false)
+      })
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F4F4F4', color: '#061122' }}>
@@ -46,8 +79,70 @@ export default function Dashboard() {
           <p className="mt-1 text-sm" style={{ color: '#054ADA' }}>Welcome back — here's what's happening.</p>
         </div>
 
+        {/* APP List */}
+        <div className="mb-6">
+          <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: '#054ADA' }}>APP List</h2>
+          {argoLoading && (
+            <div className="border rounded-sm p-6 bg-white flex items-center gap-3 text-sm text-gray-400" style={{ borderColor: '#E0E0E0' }}>
+              <svg className="animate-spin w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Loading apps…
+            </div>
+          )}
+          {argoError && (
+            <div className="border rounded-sm p-4 bg-white text-sm text-red-500" style={{ borderColor: '#E0E0E0' }}>
+              Failed to load: {argoError}
+            </div>
+          )}
+          {!argoLoading && !argoError && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {argoApps.map((app) => {
+                const healthy = app.healthStatus === 'Healthy'
+                const synced = app.syncStatus === 'Synced'
+                return (
+                  <div key={app.name} className="border rounded-sm bg-white overflow-hidden" style={{ borderColor: '#E0E0E0' }}>
+                    {/* App header */}
+                    <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: '#E0E0E0' }}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ backgroundColor: '#054ADA' }}>
+                          {app.name[0].toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm" style={{ color: '#061122' }}>{app.name}</p>
+                          <p className="text-xs" style={{ color: '#054ADA' }}>ns: {app.namespace}</p>
+                        </div>
+                      </div>
+                      <span className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-sm ${healthy ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${healthy ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+                        {app.healthStatus}
+                      </span>
+                    </div>
+                    {/* App details */}
+                    <div className="px-5 py-4 grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs mb-1" style={{ color: '#054ADA' }}>Sync Status</p>
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-sm ${synced ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${synced ? 'bg-blue-500' : 'bg-orange-400'}`}></span>
+                          {app.syncStatus}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-xs mb-1" style={{ color: '#054ADA' }}>Last Deployed</p>
+                        <p className="text-xs font-medium" style={{ color: '#061122' }}>{timeAgo(app.lastSyncTime)}</p>
+                        <p className="text-xs text-gray-400">{new Date(app.lastSyncTime).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           {stats.map((stat) => (
             <div key={stat.label} className="border rounded-sm p-5 bg-white" style={{ borderColor: '#E0E0E0' }}>
               <p className="text-xs mb-2" style={{ color: '#054ADA' }}>{stat.label}</p>
