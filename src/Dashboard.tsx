@@ -210,17 +210,19 @@ export default function Dashboard() {
                     </div>
                     <div className="p-3 flex flex-col gap-2" style={{ backgroundColor: 'rgba(5,74,218,0.03)' }}>
                       {[
-                        { icon: 'X', label: 'xuyang-app', sub: 'dev.xuyang.dev', bg: '#054ADA' },
-                        { icon: 'A', label: 'xuyang-api', sub: 'api-dev.xuyang.dev', bg: '#16a34a' },
-                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f' },
-                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20' },
+                        { icon: 'X', label: 'xuyang-app', sub: 'dev.xuyang.dev', bg: '#054ADA', offline: false },
+                        { icon: 'A', label: 'xuyang-api', sub: 'api-dev.xuyang.dev', bg: '#16a34a', offline: false },
+                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f', offline: false },
+                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20', offline: false },
+                        { icon: 'T', label: 'xg-tsla-svc', sub: 'Tesla Stock Analysis', bg: '#cc0000', offline: true },
                       ].map((svc) => (
-                        <div key={svc.label} className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
-                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: svc.bg }}>{svc.icon}</div>
-                          <div>
-                            <p className="text-xs font-semibold" style={{ color: '#061122' }}>{svc.label}</p>
+                        <div key={svc.label} className={`flex items-center gap-3 rounded-sm p-2.5 border ${svc.offline ? 'border-dashed' : ''}`} style={{ borderColor: svc.offline ? '#d1d5db' : '#e5e7eb', backgroundColor: svc.offline ? '#f9fafb' : '#fff' }}>
+                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white shrink-0" style={{ backgroundColor: svc.bg, opacity: svc.offline ? 0.45 : 1 }}>{svc.icon}</div>
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold" style={{ color: svc.offline ? '#9ca3af' : '#061122' }}>{svc.label}</p>
                             <p className="text-xs text-gray-400">{svc.sub}</p>
                           </div>
+                          {svc.offline && <span className="text-xs px-1.5 py-0.5 rounded-sm border border-dashed text-gray-400" style={{ borderColor: '#d1d5db', fontSize: '9px' }}>offline</span>}
                         </div>
                       ))}
                     </div>
@@ -234,17 +236,19 @@ export default function Dashboard() {
                     </div>
                     <div className="p-3 flex flex-col gap-2" style={{ backgroundColor: 'rgba(22,163,74,0.03)' }}>
                       {[
-                        { icon: 'X', label: 'xuyang-app', sub: 'www.xuyang.dev', bg: '#054ADA' },
-                        { icon: 'A', label: 'xuyang-api', sub: 'api.xuyang.dev', bg: '#16a34a' },
-                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f' },
-                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20' },
+                        { icon: 'X', label: 'xuyang-app', sub: 'www.xuyang.dev', bg: '#054ADA', offline: false },
+                        { icon: 'A', label: 'xuyang-api', sub: 'api.xuyang.dev', bg: '#16a34a', offline: false },
+                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f', offline: false },
+                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20', offline: false },
+                        { icon: 'T', label: 'xg-tsla-svc', sub: 'Tesla Stock Analysis', bg: '#cc0000', offline: true },
                       ].map((svc) => (
-                        <div key={svc.label} className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
-                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: svc.bg }}>{svc.icon}</div>
-                          <div>
-                            <p className="text-xs font-semibold" style={{ color: '#061122' }}>{svc.label}</p>
+                        <div key={svc.label} className={`flex items-center gap-3 rounded-sm p-2.5 border ${svc.offline ? 'border-dashed' : ''}`} style={{ borderColor: svc.offline ? '#d1d5db' : '#e5e7eb', backgroundColor: svc.offline ? '#f9fafb' : '#fff' }}>
+                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white shrink-0" style={{ backgroundColor: svc.bg, opacity: svc.offline ? 0.45 : 1 }}>{svc.icon}</div>
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold" style={{ color: svc.offline ? '#9ca3af' : '#061122' }}>{svc.label}</p>
                             <p className="text-xs text-gray-400">{svc.sub}</p>
                           </div>
+                          {svc.offline && <span className="text-xs px-1.5 py-0.5 rounded-sm border border-dashed text-gray-400" style={{ borderColor: '#d1d5db', fontSize: '9px' }}>offline</span>}
                         </div>
                       ))}
                     </div>
@@ -254,17 +258,40 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* xgao-AI VM */}
-            <div className="px-6 pb-4">
+            {/* AI VMs */}
+            <div className="px-6 pb-4 grid grid-cols-1 lg:grid-cols-2 gap-3">
+
+              {/* xgao-Agent VM */}
+              <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#e0e7ff' }}>
+                <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: '#4f46e5' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-indigo-300" />
+                    <span className="text-xs font-bold text-white tracking-widest uppercase">Agent Services</span>
+                  </div>
+                  <span className="text-xs text-indigo-300 font-mono">VM: xgao-Agent</span>
+                </div>
+                <div className="p-4" style={{ backgroundColor: 'rgba(79,70,229,0.03)' }}>
+                  {/* OpenClaw header */}
+                  <div className="flex items-center gap-3 bg-white rounded-sm p-2.5 border mb-3" style={{ borderColor: '#c7d2fe' }}>
+                    <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: '#4f46e5' }}>OC</div>
+                    <div>
+                      <p className="text-xs font-semibold" style={{ color: '#061122' }}>OpenClaw</p>
+                      <p className="text-xs text-gray-400">AI Agent — orchestrates all modules</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* xgao-AI VM */}
               <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#e9d5ff' }}>
                 <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: '#7c3aed' }}>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-purple-300" />
-                    <span className="text-xs font-bold text-white tracking-widest uppercase">AI Services</span>
+                    <span className="text-xs font-bold text-white tracking-widest uppercase">AI Engine</span>
                   </div>
                   <span className="text-xs text-purple-300 font-mono">VM: xgao-AI</span>
                 </div>
-                <div className="p-4 flex items-center gap-4" style={{ backgroundColor: 'rgba(124,58,237,0.03)' }}>
+                <div className="p-4 flex items-center gap-3" style={{ backgroundColor: 'rgba(124,58,237,0.03)' }}>
                   <div className="flex items-center gap-3 bg-white rounded-sm p-2.5 border flex-1" style={{ borderColor: '#e5e7eb' }}>
                     <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: '#7c3aed' }}>O</div>
                     <div>
@@ -272,25 +299,9 @@ export default function Dashboard() {
                       <p className="text-xs text-gray-400">Local LLM inference engine</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
-                    <div className="flex flex-col items-center gap-0.5">
-                      <div className="w-12 h-px bg-purple-300" />
-                      <span style={{ color: '#7c3aed', fontSize: '9px' }}>AI features</span>
-                    </div>
-                    <span style={{ color: '#7c3aed' }}>→</span>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 bg-white rounded-sm px-3 py-1.5 border" style={{ borderColor: '#bfdbfe' }}>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#16a34a' }} />
-                      <span className="text-xs font-medium" style={{ color: '#061122' }}>xuyang-api <span className="text-gray-400 font-normal">(xgao-dev)</span></span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-white rounded-sm px-3 py-1.5 border" style={{ borderColor: '#bbf7d0' }}>
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#16a34a' }} />
-                      <span className="text-xs font-medium" style={{ color: '#061122' }}>xuyang-api <span className="text-gray-400 font-normal">(xgao-prod)</span></span>
-                    </div>
-                  </div>
                 </div>
               </div>
+
             </div>
 
             {/* Connector */}
@@ -335,20 +346,46 @@ export default function Dashboard() {
         {/* Projects */}
         <div className="mb-6">
           <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: '#054ADA' }}>Projects</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="flex flex-col gap-4">
 
             {/* Tesla Stock Analysis */}
-            <div className="rounded-sm border overflow-hidden bg-white group hover:shadow-md transition-shadow" style={{ borderColor: '#E0E0E0' }}>
+            <div className="rounded-sm border overflow-hidden bg-white" style={{ borderColor: '#E0E0E0' }}>
               <div className="h-2 w-full" style={{ background: 'linear-gradient(90deg, #cc0000, #ff4444)' }} />
               <div className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-sm flex items-center justify-center text-white font-black text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #cc0000, #ff4444)' }}>T</div>
-                  <span className="text-xs px-2 py-0.5 rounded-sm font-medium bg-blue-50 text-blue-700 border border-blue-100">Active</span>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-sm flex items-center justify-center text-white font-black text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #cc0000, #ff4444)' }}>T</div>
+                    <div>
+                      <p className="text-sm font-bold" style={{ color: '#061122' }}>Tesla Stock Analysis</p>
+                      <p className="text-xs font-mono mb-0.5" style={{ color: '#054ADA' }}>xg-tsla-svc</p>
+                      <p className="text-xs text-gray-500">AI-powered TSLA analysis — trend detection, sentiment analysis, and price prediction.</p>
+                    </div>
+                  </div>
+                  <span className="text-xs px-2 py-0.5 rounded-sm font-medium bg-blue-50 text-blue-700 border border-blue-100 shrink-0">Active</span>
                 </div>
-                <p className="text-sm font-bold mb-1" style={{ color: '#061122' }}>Tesla Stock Analysis</p>
-                <p className="text-xs text-gray-500 mb-4">AI-powered stock analysis using Ollama LLM — trend detection, sentiment analysis, and price prediction for TSLA.</p>
+                {/* Modules */}
+                <div className="mb-4">
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#054ADA' }}>Modules</p>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                    {[
+                      { icon: '📡', label: 'Real-Time Data' },
+                      { icon: '📊', label: 'Technical Analysis' },
+                      { icon: '📋', label: 'Fundamental Analysis' },
+                      { icon: '🗞️', label: 'Market Information' },
+                      { icon: '🔍', label: 'Screener' },
+                      { icon: '🧪', label: 'Mock System' },
+                      { icon: '💸', label: 'Money Flow Analysis' },
+                    ].map((mod) => (
+                      <div key={mod.label} className="flex items-center gap-2 rounded-sm px-2.5 py-2 border" style={{ borderColor: '#e0e7ff', backgroundColor: 'rgba(79,70,229,0.03)' }}>
+                        <span className="text-sm shrink-0">{mod.icon}</span>
+                        <p className="text-xs font-medium" style={{ color: '#061122' }}>{mod.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Tech stack */}
                 <div className="flex flex-wrap gap-2">
-                  {['Ollama', 'xuyang-api', 'Kafka', 'MySQL'].map((tag) => (
+                  {['OpenClaw', 'Ollama', 'xuyang-api', 'Kafka', 'MySQL'].map((tag) => (
                     <span key={tag} className="text-xs px-2 py-0.5 rounded-sm bg-gray-100 text-gray-600 border border-gray-200">{tag}</span>
                   ))}
                 </div>
@@ -356,15 +393,17 @@ export default function Dashboard() {
             </div>
 
             {/* Placeholder cards */}
-            {[1, 2].map((i) => (
-              <div key={i} className="rounded-sm border border-dashed bg-white flex flex-col items-center justify-center p-8 text-center" style={{ borderColor: '#d1d5db' }}>
-                <div className="w-10 h-10 rounded-sm flex items-center justify-center mb-3" style={{ backgroundColor: '#f3f4f6' }}>
-                  <span className="text-gray-400 text-lg font-light">+</span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {[1, 2].map((i) => (
+                <div key={i} className="rounded-sm border border-dashed bg-white flex flex-col items-center justify-center p-8 text-center" style={{ borderColor: '#d1d5db' }}>
+                  <div className="w-10 h-10 rounded-sm flex items-center justify-center mb-3" style={{ backgroundColor: '#f3f4f6' }}>
+                    <span className="text-gray-400 text-lg font-light">+</span>
+                  </div>
+                  <p className="text-xs font-semibold text-gray-400">Coming Soon</p>
+                  <p className="text-xs text-gray-300 mt-1">New project</p>
                 </div>
-                <p className="text-xs font-semibold text-gray-400">Coming Soon</p>
-                <p className="text-xs text-gray-300 mt-1">New project</p>
-              </div>
-            ))}
+              ))}
+            </div>
 
           </div>
         </div>
