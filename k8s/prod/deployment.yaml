@@ -17,7 +17,7 @@ spec:
         - name: ghcr-login
       containers:
         - name: app
-          image: ghcr.io/lookmail88/xuyang-app:v0.0.43
+          image: ghcr.io/lookmail88/xuyang-app:v0.0.44
           imagePullPolicy: Always
           ports:
             - containerPort: 80
