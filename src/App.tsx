@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StarField from './StarField'
 import { API } from './api'
+import { useVersion } from './useVersion'
 import './App.css'
 
 function App() {
   const navigate = useNavigate()
+  const version = useVersion()
   const [response, setResponse] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -71,7 +73,7 @@ function App() {
         <div className="inline-flex items-start gap-2 rounded-sm px-4 py-2 text-sm mb-8 border" style={{ backgroundColor: 'rgba(255,209,0,0.1)', borderColor: 'rgba(255,209,0,0.4)', color: '#FFD100' }}>
           <span className={`w-2 h-2 rounded-full animate-pulse mt-1 shrink-0 ${loading ? 'bg-yellow-400' : error ? 'bg-red-500' : 'bg-green-500'}`}></span>
           <div className="flex flex-col text-left">
-            <span>{loading ? 'Checking API…' : error ? 'API Unreachable' : 'API Connected'}</span>
+            <span>{loading ? 'Checking API…' : error ? 'API Unreachable' : `API Connected${version ? ` — ${version}` : ''}`}</span>
             {!loading && lastRefresh && <span className="text-xs opacity-60">Last Check: {lastRefresh}</span>}
             {!loading && <span className="text-xs opacity-60">Next check in {countdown}s</span>}
           </div>
@@ -142,6 +144,7 @@ function App() {
       {/* Footer */}
       <footer className="relative z-10 text-center text-xs py-6 border-t border-white/5 text-slate-600">
         © {new Date().getFullYear()} xuyang.dev — Built with React &amp; Vite
+        {version && <span className="ml-2 opacity-60">{version}</span>}
       </footer>
     </div>
   )
