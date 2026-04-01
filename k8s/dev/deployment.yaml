@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xuyang-app
+  namespace: xgao-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xuyang-app
+  template:
+    metadata:
+      labels:
+        app: xuyang-app
+    spec:
+      imagePullSecrets:
+        - name: ghcr-login # 👈 刚才你在终端创建的 Secret 名字
+      containers:
+        - name: app
+          image: ghcr.io/lookmail88/xuyang-app:v0.0.44
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: app-config
+              mountPath: /usr/share/nginx/html/config.json
+              subPath: config.json
+      volumes:
+        - name: app-config
+          configMap:
+            name: xuyang-app-config

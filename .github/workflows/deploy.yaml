@@ -1,4 +1,4 @@
-name: Build and Push to GHCR
+name: Build Push and Release to GHCR
 
 on:
   push:
@@ -11,15 +11,35 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     permissions:
-      contents: read
+      contents: write
       packages: write
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
 
+      # 1. 自动根据 semantic commit 计算并推送新 Tag
+      #    feat:           → minor bump (e.g. v1.1.0)
+      #    fix: / chore:   → patch bump (e.g. v1.0.1)
+      #    BREAKING CHANGE → major bump (e.g. v2.0.0)
+      - name: Bump version and push tag
+        id: tag_version
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+          MINOR_STRING_BUMP: "feat:"
+          MAJOR_STRING_BUMP: "BREAKING CHANGE"
+          RELEASE_BRANCHES: development
+
+      # 2. 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. 登录到 GitHub Container Registry
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -27,6 +47,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # 4. 构建并推送镜像
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -34,4 +55,30 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 5. 更新 k8s manifest 中的镜像版本，触发 ArgoCD 自动同步
+      - name: Update k8s deployment image tag
+        run: |
+          sed -i "s|image: ghcr.io/lookmail88/xuyang-app:.*|image: ghcr.io/lookmail88/xuyang-app:${{ steps.tag_version.outputs.new_tag }}|" k8s/dev/deployment.yaml
+          sed -i "s|image: ghcr.io/lookmail88/xuyang-app:.*|image: ghcr.io/lookmail88/xuyang-app:${{ steps.tag_version.outputs.new_tag }}|" k8s/prod/deployment.yaml
+
+      # 6. 更新 package.json 中的版本号（去掉 v 前缀）
+      - name: Update package.json version
+        run: |
+          VERSION=${{ steps.tag_version.outputs.new_tag }}
+          npm version ${VERSION#v} --no-git-tag-version
+
+      - name: Commit and push updated manifest and package.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/dev/deployment.yaml k8s/prod/deployment.yaml package.json package-lock.json
+          git commit -m "chore: update image tag and version to ${{ steps.tag_version.outputs.new_tag }} [skip ci]"
+          git push origin development
+
+      - name: Output Release Info
+        run: |
+          echo "Successfully released version: ${{ steps.tag_version.outputs.new_tag }}"

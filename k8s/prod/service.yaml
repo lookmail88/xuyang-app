@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: xuyang-app-service
+  namespace: xgao-prod
+spec:
+  selector:
+    app: xuyang-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
