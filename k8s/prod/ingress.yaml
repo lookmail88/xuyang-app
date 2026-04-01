@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: xuyang-app-ingress
+  namespace: xgao-prod
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: xuyang.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: xuyang-app-service
+                port:
+                  number: 80

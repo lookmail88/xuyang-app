@@ -1,6 +1,6 @@
-const BASE = 'https://api-dev.xuyang.dev/xuyang-api'
+import { getConfig } from './config'
 
 export const API = {
-  health: `${BASE}/health`,
-  argoApps: `${BASE}/argo/apps`,
+  get health() { return `${getConfig().API_BASE_URL}/health` },
+  get argoApps() { return `${getConfig().API_BASE_URL}/argo/apps` },
 }
