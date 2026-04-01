@@ -66,7 +66,7 @@ jobs:
       - name: Update package.json version
         run: |
           VERSION=${{ steps.tag_version.outputs.new_tag }}
-          npm version ${VERSION#v} --no-git-tag-version
+          npm version ${VERSION#v} --no-git-tag-version || true
 
       - name: Commit and push updated manifest and package.json
         run: |
