@@ -32,16 +32,13 @@ jobs:
       #    BREAKING CHANGE → major bump (e.g. v2.0.0)
       - name: Bump version and push tag
         id: tag_version
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: patch
-          MINOR_STRING_BUMP: "feat:"
-          MAJOR_STRING_BUMP: "BREAKING CHANGE"
-          RELEASE_BRANCHES: development
-          BUMP_EACH_COMMIT: true
-          BUMP_EACH_COMMIT_PATCH_PATTERN: "fix:|chore:|refactor:|docs:|style:|test:|Merge"
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+          minor_string_tags: "feat:"
+          major_string_tags: "BREAKING CHANGE"
+          tag_prefix: v
 
       # 3. 设置 Docker Buildx
       - name: Set up Docker Buildx
