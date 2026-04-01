@@ -11,19 +11,6 @@ interface ArgoApp {
   lastSyncTime: string
 }
 
-const stats = [
-  { label: 'Active Sessions', value: '1,893', change: '+12%', up: true },
-  { label: 'Revenue', value: '$48,200', change: '+8%', up: true },
-  { label: 'Error Rate', value: '0.4%', change: '-2%', up: false },
-]
-
-const activity = [
-  { user: 'Alice Chen', action: 'Deployed v1.0.1 to production', time: '2m ago' },
-  { user: 'Bob Smith', action: 'Updated API configuration', time: '15m ago' },
-  { user: 'Carol Wang', action: 'Created new service endpoint', time: '1h ago' },
-  { user: 'David Lee', action: 'Resolved incident #204', time: '3h ago' },
-  { user: 'Eva Park', action: 'Merged pull request #87', time: '5h ago' },
-]
 
 function timeAgo(iso: string) {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
@@ -143,69 +130,248 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {stats.map((stat) => (
-            <div key={stat.label} className="border rounded-sm p-5 bg-white" style={{ borderColor: '#E0E0E0' }}>
-              <p className="text-xs mb-2" style={{ color: '#054ADA' }}>{stat.label}</p>
-              <p className="text-2xl font-bold tracking-tight" style={{ color: '#061122' }}>{stat.value}</p>
-              <p className={`text-xs mt-1 font-medium ${stat.up ? 'text-green-600' : 'text-red-500'}`}>
-                {stat.change} from last month
-              </p>
-            </div>
-          ))}
-        </div>
+        {/* System Architecture */}
+        <div className="mb-6">
+          <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: '#054ADA' }}>System Architecture</h2>
+          <div className="rounded-sm overflow-hidden" style={{ background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)', border: '1px solid #dde6ff' }}>
 
-        {/* Content grid */}
-        <div className="grid lg:grid-cols-3 gap-4">
-          {/* Activity feed */}
-          <div className="lg:col-span-2 border rounded-sm p-6 bg-white" style={{ borderColor: '#E0E0E0' }}>
-            <h2 className="text-xs font-semibold mb-4 uppercase tracking-widest" style={{ color: '#054ADA' }}>Recent Activity</h2>
-            <ul className="space-y-4">
-              {activity.map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ backgroundColor: '#054ADA' }}>
-                    {item.user[0]}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium" style={{ color: '#061122' }}>{item.user}</p>
-                    <p className="text-xs truncate" style={{ color: '#054ADA' }}>{item.action}</p>
-                  </div>
-                  <span className="text-xs shrink-0" style={{ color: '#054ADA' }}>{item.time}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* System status */}
-          <div className="border rounded-sm p-6 bg-white" style={{ borderColor: '#E0E0E0' }}>
-            <h2 className="text-xs font-semibold mb-4 uppercase tracking-widest" style={{ color: '#054ADA' }}>System Status</h2>
-            <ul className="space-y-3">
-              {[
-                { name: 'API', status: 'Operational' },
-                { name: 'Database', status: 'Operational' },
-                { name: 'CDN', status: 'Operational' },
-                { name: 'Auth', status: 'Degraded' },
-              ].map((svc) => (
-                <li key={svc.name} className="flex items-center justify-between text-sm">
-                  <span style={{ color: '#061122' }}>{svc.name}</span>
-                  <span className={`flex items-center gap-1.5 text-xs font-medium ${svc.status === 'Operational' ? 'text-green-600' : 'text-yellow-600'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${svc.status === 'Operational' ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
-                    {svc.status}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <p className="text-xs mb-2" style={{ color: '#054ADA' }}>API Uptime</p>
-              <div className="w-full rounded-sm h-2 bg-gray-200">
-                <div className="h-2 rounded-sm" style={{ width: '99.8%', backgroundColor: '#054ADA' }}></div>
+            {/* GitHub Repos */}
+            <div className="px-6 pt-6 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-5 h-5 rounded-sm flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: '#24292e' }}>G</div>
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">GitHub Repositories</span>
               </div>
-              <p className="text-xs mt-1" style={{ color: '#054ADA' }}>99.8% last 30 days</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-sm p-4 border-l-4" style={{ backgroundColor: 'rgba(5,74,218,0.06)', borderLeftColor: '#054ADA', border: '1px solid rgba(5,74,218,0.2)', borderLeft: '4px solid #054ADA' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-sm text-white" style={{ backgroundColor: '#054ADA' }}>DEV</span>
+                    <span className="text-xs font-semibold" style={{ color: '#061122' }}>branch: development</span>
+                  </div>
+                  <p className="text-xs text-gray-500">GitHub Actions → build & push image → GHCR</p>
+                </div>
+                <div className="rounded-sm p-4" style={{ backgroundColor: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.2)', borderLeft: '4px solid #16a34a' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-sm text-white" style={{ backgroundColor: '#16a34a' }}>PROD</span>
+                    <span className="text-xs font-semibold" style={{ color: '#061122' }}>branch: master</span>
+                  </div>
+                  <p className="text-xs text-gray-500">GitHub Actions → build & push image → GHCR</p>
+                </div>
+              </div>
             </div>
+
+            {/* Connector */}
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-4 bg-gray-300" />
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full text-xs text-gray-500 border border-gray-200 bg-white shadow-sm">
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                ArgoCD GitOps sync
+              </div>
+              <div className="w-px h-4 bg-gray-300" />
+            </div>
+
+            {/* k3s Cluster */}
+            <div className="px-6 pb-4">
+              <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#c7d7ff', backgroundColor: 'rgba(255,255,255,0.7)' }}>
+                <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: '#061122' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-400" />
+                    <span className="text-xs font-bold text-white tracking-widest uppercase">k3s Cluster</span>
+                  </div>
+                  <span className="text-xs text-gray-400 font-mono">VM: xgao-env</span>
+                </div>
+                <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-3">
+
+                  {/* infra */}
+                  <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#d1d5db' }}>
+                    <div className="px-3 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: '#374151' }}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                      <span className="text-xs font-semibold text-white">namespace: infra</span>
+                    </div>
+                    <div className="p-3 flex flex-col gap-2" style={{ backgroundColor: 'rgba(107,114,128,0.04)' }}>
+                      <div className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
+                        <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0" style={{ backgroundColor: '#FFD100', color: '#061122' }}>T</div>
+                        <div>
+                          <p className="text-xs font-semibold" style={{ color: '#061122' }}>Traefik</p>
+                          <p className="text-xs text-gray-400">Ingress Controller</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
+                        <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: '#ef4444' }}>A</div>
+                        <div>
+                          <p className="text-xs font-semibold" style={{ color: '#061122' }}>ArgoCD</p>
+                          <p className="text-xs text-gray-400">GitOps Operator</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* xgao-dev */}
+                  <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#bfdbfe' }}>
+                    <div className="px-3 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: '#054ADA' }}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-300" />
+                      <span className="text-xs font-semibold text-white">namespace: xgao-dev</span>
+                    </div>
+                    <div className="p-3 flex flex-col gap-2" style={{ backgroundColor: 'rgba(5,74,218,0.03)' }}>
+                      {[
+                        { icon: 'X', label: 'xuyang-app', sub: 'dev.xuyang.dev', bg: '#054ADA' },
+                        { icon: 'A', label: 'xuyang-api', sub: 'api-dev.xuyang.dev', bg: '#16a34a' },
+                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f' },
+                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20' },
+                      ].map((svc) => (
+                        <div key={svc.label} className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
+                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: svc.bg }}>{svc.icon}</div>
+                          <div>
+                            <p className="text-xs font-semibold" style={{ color: '#061122' }}>{svc.label}</p>
+                            <p className="text-xs text-gray-400">{svc.sub}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* xgao-prod */}
+                  <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#bbf7d0' }}>
+                    <div className="px-3 py-1.5 flex items-center gap-1.5" style={{ backgroundColor: '#16a34a' }}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-300" />
+                      <span className="text-xs font-semibold text-white">namespace: xgao-prod</span>
+                    </div>
+                    <div className="p-3 flex flex-col gap-2" style={{ backgroundColor: 'rgba(22,163,74,0.03)' }}>
+                      {[
+                        { icon: 'X', label: 'xuyang-app', sub: 'www.xuyang.dev', bg: '#054ADA' },
+                        { icon: 'A', label: 'xuyang-api', sub: 'api.xuyang.dev', bg: '#16a34a' },
+                        { icon: 'M', label: 'MySQL', sub: 'Database', bg: '#00758f' },
+                        { icon: 'K', label: 'Kafka', sub: 'Message System', bg: '#231f20' },
+                      ].map((svc) => (
+                        <div key={svc.label} className="flex items-center gap-3 bg-white rounded-sm p-2.5 border" style={{ borderColor: '#e5e7eb' }}>
+                          <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: svc.bg }}>{svc.icon}</div>
+                          <div>
+                            <p className="text-xs font-semibold" style={{ color: '#061122' }}>{svc.label}</p>
+                            <p className="text-xs text-gray-400">{svc.sub}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            {/* xgao-AI VM */}
+            <div className="px-6 pb-4">
+              <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#e9d5ff' }}>
+                <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: '#7c3aed' }}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-purple-300" />
+                    <span className="text-xs font-bold text-white tracking-widest uppercase">AI Services</span>
+                  </div>
+                  <span className="text-xs text-purple-300 font-mono">VM: xgao-AI</span>
+                </div>
+                <div className="p-4 flex items-center gap-4" style={{ backgroundColor: 'rgba(124,58,237,0.03)' }}>
+                  <div className="flex items-center gap-3 bg-white rounded-sm p-2.5 border flex-1" style={{ borderColor: '#e5e7eb' }}>
+                    <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-black shrink-0 text-white" style={{ backgroundColor: '#7c3aed' }}>O</div>
+                    <div>
+                      <p className="text-xs font-semibold" style={{ color: '#061122' }}>Ollama</p>
+                      <p className="text-xs text-gray-400">Local LLM inference engine</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <div className="flex flex-col items-center gap-0.5">
+                      <div className="w-12 h-px bg-purple-300" />
+                      <span style={{ color: '#7c3aed', fontSize: '9px' }}>AI features</span>
+                    </div>
+                    <span style={{ color: '#7c3aed' }}>→</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 bg-white rounded-sm px-3 py-1.5 border" style={{ borderColor: '#bfdbfe' }}>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#16a34a' }} />
+                      <span className="text-xs font-medium" style={{ color: '#061122' }}>xuyang-api <span className="text-gray-400 font-normal">(xgao-dev)</span></span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white rounded-sm px-3 py-1.5 border" style={{ borderColor: '#bbf7d0' }}>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#16a34a' }} />
+                      <span className="text-xs font-medium" style={{ color: '#061122' }}>xuyang-api <span className="text-gray-400 font-normal">(xgao-prod)</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Connector */}
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-4 bg-gray-300" />
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full text-xs text-gray-500 border border-gray-200 bg-white shadow-sm">
+                <div className="w-2 h-2 rounded-full bg-orange-400" />
+                DNS / CDN
+              </div>
+              <div className="w-px h-4 bg-gray-300" />
+            </div>
+
+            {/* Cloudflare */}
+            <div className="px-6 pb-6">
+              <div className="rounded-sm border overflow-hidden" style={{ borderColor: '#fed7aa' }}>
+                <div className="px-4 py-2 flex items-center gap-2" style={{ backgroundColor: '#f6821f' }}>
+                  <div className="w-2 h-2 rounded-full bg-orange-200" />
+                  <span className="text-xs font-bold text-white tracking-widest uppercase">Cloudflare</span>
+                </div>
+                <div className="p-4 grid grid-cols-2 lg:grid-cols-4 gap-3" style={{ backgroundColor: 'rgba(246,130,31,0.03)' }}>
+                  {[
+                    { domain: 'dev.xuyang.dev', desc: 'UI · Dev', tag: 'DEV', tagColor: '#054ADA' },
+                    { domain: 'api-dev.xuyang.dev', desc: 'API · Dev', tag: 'DEV', tagColor: '#16a34a' },
+                    { domain: 'www.xuyang.dev', desc: 'UI · Prod', tag: 'PROD', tagColor: '#054ADA' },
+                    { domain: 'api.xuyang.dev', desc: 'API · Prod', tag: 'PROD', tagColor: '#16a34a' },
+                  ].map((entry) => (
+                    <div key={entry.domain} className="bg-white rounded-sm border p-3" style={{ borderColor: '#e5e7eb' }}>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="text-xs font-bold px-1.5 py-0.5 rounded-sm text-white" style={{ backgroundColor: entry.tagColor, fontSize: '9px' }}>{entry.tag}</span>
+                      </div>
+                      <p className="text-xs font-semibold" style={{ color: '#061122' }}>{entry.domain}</p>
+                      <p className="text-xs text-gray-400">{entry.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+
+        {/* Projects */}
+        <div className="mb-6">
+          <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: '#054ADA' }}>Projects</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+            {/* Tesla Stock Analysis */}
+            <div className="rounded-sm border overflow-hidden bg-white group hover:shadow-md transition-shadow" style={{ borderColor: '#E0E0E0' }}>
+              <div className="h-2 w-full" style={{ background: 'linear-gradient(90deg, #cc0000, #ff4444)' }} />
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-sm flex items-center justify-center text-white font-black text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #cc0000, #ff4444)' }}>T</div>
+                  <span className="text-xs px-2 py-0.5 rounded-sm font-medium bg-blue-50 text-blue-700 border border-blue-100">Active</span>
+                </div>
+                <p className="text-sm font-bold mb-1" style={{ color: '#061122' }}>Tesla Stock Analysis</p>
+                <p className="text-xs text-gray-500 mb-4">AI-powered stock analysis using Ollama LLM — trend detection, sentiment analysis, and price prediction for TSLA.</p>
+                <div className="flex flex-wrap gap-2">
+                  {['Ollama', 'xuyang-api', 'Kafka', 'MySQL'].map((tag) => (
+                    <span key={tag} className="text-xs px-2 py-0.5 rounded-sm bg-gray-100 text-gray-600 border border-gray-200">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Placeholder cards */}
+            {[1, 2].map((i) => (
+              <div key={i} className="rounded-sm border border-dashed bg-white flex flex-col items-center justify-center p-8 text-center" style={{ borderColor: '#d1d5db' }}>
+                <div className="w-10 h-10 rounded-sm flex items-center justify-center mb-3" style={{ backgroundColor: '#f3f4f6' }}>
+                  <span className="text-gray-400 text-lg font-light">+</span>
+                </div>
+                <p className="text-xs font-semibold text-gray-400">Coming Soon</p>
+                <p className="text-xs text-gray-300 mt-1">New project</p>
+              </div>
+            ))}
+
+          </div>
+        </div>
+
       </main>
 
       <footer className="text-center text-xs py-6 border-t border-gray-200" style={{ color: '#054ADA' }}>
