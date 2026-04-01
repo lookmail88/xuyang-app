@@ -40,6 +40,8 @@ jobs:
           MINOR_STRING_BUMP: "feat:"
           MAJOR_STRING_BUMP: "BREAKING CHANGE"
           RELEASE_BRANCHES: development
+          BUMP_EACH_COMMIT: true
+          BUMP_EACH_COMMIT_PATCH_PATTERN: "fix:|chore:|refactor:|docs:|style:|test:"
 
       # 3. 设置 Docker Buildx
       - name: Set up Docker Buildx
