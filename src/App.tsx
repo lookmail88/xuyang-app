@@ -144,7 +144,7 @@ function App() {
       {/* Footer */}
       <footer className="relative z-10 text-center text-xs py-6 border-t border-white/5 text-slate-600">
         © {new Date().getFullYear()} xuyang.dev — Built with React &amp; Vite
-        {version && <span className="ml-2 opacity-60">{version}</span>}
+        <span className="ml-2 opacity-60">v{__APP_VERSION__}</span>
       </footer>
     </div>
   )
