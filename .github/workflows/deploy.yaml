@@ -39,6 +39,7 @@ jobs:
           minor_string_tags: "feat:"
           major_string_tags: "BREAKING CHANGE"
           tag_prefix: v
+          pre_release_branches: ""
 
       # 3. 设置 Docker Buildx
       - name: Set up Docker Buildx
