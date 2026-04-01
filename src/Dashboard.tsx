@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API } from './api'
+import { useVersion } from './useVersion'
 
 interface ArgoApp {
   name: string
@@ -37,6 +38,7 @@ export default function Dashboard() {
   const [argoApps, setArgoApps] = useState<ArgoApp[]>([])
   const [argoLoading, setArgoLoading] = useState(true)
   const [argoError, setArgoError] = useState<string | null>(null)
+  const version = useVersion()
 
   useEffect(() => {
     fetch(API.argoApps)
@@ -208,6 +210,7 @@ export default function Dashboard() {
 
       <footer className="text-center text-xs py-6 border-t border-gray-200" style={{ color: '#054ADA' }}>
         © {new Date().getFullYear()} xuyang.dev — Built with React &amp; Vite
+        {version && <span className="ml-2 opacity-60">{version}</span>}
       </footer>
     </div>
   )
