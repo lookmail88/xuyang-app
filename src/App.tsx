@@ -79,8 +79,8 @@ function App() {
           </div>
         </div>
 
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6 text-white">
-          Welcome to<br />Xuyang App
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6 text-white text-center">
+          Welcome to<br />Xuyang's Space
         </h1>
 
         <div className="flex gap-4 flex-wrap justify-center mb-20">
