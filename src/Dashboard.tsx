@@ -11,6 +11,35 @@ interface ArgoApp {
   lastSyncTime: string
 }
 
+function AppCell({ app }: { app: ArgoApp }) {
+  const healthy = app.healthStatus === 'Healthy'
+  const synced = app.syncStatus === 'Synced'
+  return (
+    <div className="flex-1 border rounded-sm overflow-hidden" style={{ borderColor: colors.borderLight }}>
+      <div className="flex items-center px-4 py-2 border-b"
+        style={{ borderColor: colors.borderLight, backgroundColor: colors.bgPage }}>
+        <span className={`flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-sm ${healthy ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${healthy ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+          {app.healthStatus}
+        </span>
+      </div>
+      <div className="px-4 py-3 grid grid-cols-2 gap-3 bg-white">
+        <div>
+          <p className="text-xs mb-1" style={{ color: colors.primary }}>Sync</p>
+          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-sm ${synced ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${synced ? 'bg-blue-500' : 'bg-orange-400'}`}></span>
+            {app.syncStatus}
+          </span>
+        </div>
+        <div>
+          <p className="text-xs mb-1" style={{ color: colors.primary }}>Last Deployed</p>
+          <p className="text-xs font-medium" style={{ color: colors.textPrimary }}>{timeAgo(app.lastSyncTime)}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function timeAgo(iso: string) {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
   if (diff < 60) return `${diff}s ago`
@@ -25,12 +54,16 @@ export default function Dashboard() {
   const [argoLoading, setArgoLoading] = useState(true)
   const [argoError, setArgoError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchArgoApps = () => {
+    setArgoLoading(true)
+    setArgoError(null)
     fetch(API.argoApps)
       .then((res) => res.json())
       .then((data) => { setArgoApps(data); setArgoLoading(false) })
       .catch((err) => { setArgoError(err.message); setArgoLoading(false) })
-  }, [])
+  }
+
+  useEffect(() => { fetchArgoApps() }, [])
 
   const devServices = [
     { icon: 'X', label: 'xuyang-app', sub: 'dev.xuyang.dev', bg: colors.dev, offline: false },
@@ -89,7 +122,17 @@ export default function Dashboard() {
 
         {/* APP List */}
         <div className="mb-6">
-          <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest" style={{ color: colors.primary }}>APP List</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: colors.primary }}>APP List</h2>
+            <button onClick={fetchArgoApps} disabled={argoLoading}
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-sm border transition-all hover:bg-gray-50 disabled:opacity-50"
+              style={{ borderColor: colors.borderLight, color: colors.primary }}>
+              <svg className={`w-3 h-3 ${argoLoading ? 'animate-spin' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
           {argoLoading && (
             <div className="border rounded-sm p-6 bg-white flex items-center gap-3 text-sm text-gray-400" style={{ borderColor: colors.borderLight }}>
               <svg className="animate-spin w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
@@ -104,46 +147,36 @@ export default function Dashboard() {
               Failed to load: {argoError}
             </div>
           )}
-          {!argoLoading && !argoError && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {argoApps.map((app) => {
-                const healthy = app.healthStatus === 'Healthy'
-                const synced = app.syncStatus === 'Synced'
-                return (
-                  <div key={app.name} className="border rounded-sm bg-white overflow-hidden" style={{ borderColor: colors.borderLight }}>
-                    <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: colors.borderLight }}>
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-bold text-white shrink-0"
-                          style={{ backgroundColor: colors.primary }}>{app.name[0].toUpperCase()}</div>
-                        <div>
-                          <p className="font-semibold text-sm" style={{ color: colors.textPrimary }}>{app.name}</p>
-                          <p className="text-xs" style={{ color: colors.primary }}>ns: {app.namespace}</p>
-                        </div>
-                      </div>
-                      <span className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-sm ${healthy ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${healthy ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
-                        {app.healthStatus}
-                      </span>
+          {!argoLoading && !argoError && (() => {
+            const sortOrder = (name: string) => name.startsWith('xg-') ? 1 : 0
+
+            const grouped = argoApps
+              .filter(app => !app.name.includes('infra'))
+              .slice()
+              .sort((a, b) => sortOrder(a.name) - sortOrder(b.name) || a.name.localeCompare(b.name))
+              .reduce<Record<string, ArgoApp[]>>((acc, app) => {
+                if (!acc[app.name]) acc[app.name] = []
+                acc[app.name].push(app)
+                return acc
+              }, {})
+
+            return (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {Object.entries(grouped).map(([name, apps]) => (
+                  <div key={name} className="border rounded-sm bg-white overflow-hidden" style={{ borderColor: colors.borderLight }}>
+                    <div className="flex items-center gap-3 px-5 py-3 border-b" style={{ borderColor: colors.borderLight }}>
+                      <div className="w-8 h-8 rounded-sm flex items-center justify-center text-xs font-bold text-white shrink-0"
+                        style={{ backgroundColor: colors.primary }}>{name[0].toUpperCase()}</div>
+                      <p className="font-semibold text-sm" style={{ color: colors.textPrimary }}>{name}</p>
                     </div>
-                    <div className="px-5 py-4 grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-xs mb-1" style={{ color: colors.primary }}>Sync Status</p>
-                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-sm ${synced ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${synced ? 'bg-blue-500' : 'bg-orange-400'}`}></span>
-                          {app.syncStatus}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-xs mb-1" style={{ color: colors.primary }}>Last Deployed</p>
-                        <p className="text-xs font-medium" style={{ color: colors.textPrimary }}>{timeAgo(app.lastSyncTime)}</p>
-                        <p className="text-xs text-gray-400">{new Date(app.lastSyncTime).toLocaleString()}</p>
-                      </div>
+                    <div className="p-3 flex gap-3">
+                      {apps.map(app => <AppCell key={app.namespace} app={app} />)}
                     </div>
                   </div>
-                )
-              })}
-            </div>
-          )}
+                ))}
+              </div>
+            )
+          })()}
         </div>
 
         {/* System Architecture */}

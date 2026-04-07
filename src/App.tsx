@@ -63,7 +63,7 @@ function App() {
           <span className="font-semibold text-lg tracking-tight text-white">xuyang.dev</span>
         </div>
         <nav className="flex gap-6 text-sm text-slate-400">
-          <a href="#" className="hover:text-white transition-colors">Docs</a>
+          <a href="#" className="hover:text-white transition-colors">Xigi</a>
           <a href="#" className="hover:text-white transition-colors">GitHub</a>
           <a href="#" className="hover:text-white transition-colors">Contact</a>
         </nav>
