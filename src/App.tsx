@@ -64,7 +64,7 @@ function App() {
         </div>
         <nav className="flex gap-6 text-sm text-slate-400">
           <a href="#" className="hover:text-white transition-colors">Xigi</a>
-          <a href="#" className="hover:text-white transition-colors">GitHub</a>
+          <a href="https://github.com/lookmail88/xuyang-app" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub</a>
           <a href="#" className="hover:text-white transition-colors">Contact</a>
         </nav>
       </header>
