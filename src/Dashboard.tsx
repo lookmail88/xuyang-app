@@ -191,12 +191,209 @@ function Connector({ label, dot }: { label: string; dot: string }) {
   )
 }
 
+// ── TSLA Report types ─────────────────────────────────────────────
+interface TslaReport {
+  reportId: number
+  symbol: string
+  reportTimestamp: string
+  trendSentiment: string
+  summaryConclusion: string
+  supportLevelPrimary: number
+  supportLevelSecondary: number
+  resistanceLevelPrimary: number
+  resistanceLevelSecondary: number
+  detailedAnalysis: string
+  volumeObservation: string
+  priceActionObservation: string
+  riskLevel: string
+}
+
+// ── TSLA Report Modal ─────────────────────────────────────────────
+function TslaReportModal({ onClose, report, loading, error, generating, onGenerate }: {
+  onClose: () => void
+  report: TslaReport | null
+  loading: boolean
+  error: string | null
+  generating: boolean
+  onGenerate: () => void
+}) {
+  const bullish = report?.trendSentiment?.toLowerCase().includes('bullish')
+  const sentimentColor = bullish ? '#34c759' : '#ff453a'
+  const busy = loading || generating
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(6px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '24px',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: '100%', maxWidth: '680px', maxHeight: '85vh',
+          overflowY: 'auto', borderRadius: '16px',
+          backgroundColor: '#1c1c1e', fontFamily: FONT,
+          boxShadow: '0 32px 64px rgba(0,0,0,0.5)',
+        }}
+      >
+        {/* Header */}
+        <div style={{ position: 'sticky', top: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', backgroundColor: '#1c1c1e', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: colors.tesla, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '14px', color: '#fff' }}>T</div>
+            <div>
+              <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>TSLA Latest Report</p>
+              {report && !generating && <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}>{new Date(report.reportTimestamp).toLocaleString()}</p>}
+              {generating && <p style={{ fontSize: '11px', color: 'rgba(255,165,0,0.7)', fontFamily: 'monospace' }}>Generating new report…</p>}
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button
+              onClick={onGenerate}
+              disabled={busy}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
+                fontSize: '12px', padding: '5px 14px',
+                borderRadius: '980px', border: '1px solid rgba(255,255,255,0.2)',
+                color: busy ? 'rgba(255,255,255,0.3)' : '#ffffff',
+                backgroundColor: busy ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.1)',
+                cursor: busy ? 'not-allowed' : 'pointer', fontFamily: FONT,
+                transition: 'opacity .15s',
+              }}
+            >
+              <svg className={generating ? 'animate-spin' : ''} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {generating ? 'Generating…' : 'Generate New'}
+            </button>
+            <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', color: '#ffffff', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>×</button>
+          </div>
+        </div>
+
+        <div style={{ padding: '24px' }}>
+          {(loading || generating) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.4)', fontSize: '14px', padding: '40px 0', justifyContent: 'center' }}>
+              <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              {generating ? 'Generating new report, this may take a moment…' : 'Loading report…'}
+            </div>
+          )}
+
+          {error && <p style={{ color: '#ff453a', fontSize: '14px', textAlign: 'center', padding: '40px 0' }}>Failed to load: {error}</p>}
+
+          {report && !loading && !generating && (
+            <>
+              {/* Sentiment + Risk */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+                <div style={{ borderRadius: '10px', padding: '14px 16px', backgroundColor: '#272729' }}>
+                  <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginBottom: '6px', fontWeight: 500 }}>Sentiment</p>
+                  {report.trendSentiment.split('|').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                    <p key={i} style={{ fontSize: i === 0 ? '13px' : '12px', fontWeight: 700, color: i === 0 ? sentimentColor : 'rgba(255,255,255,0.45)', marginTop: i === 0 ? 0 : '3px' }}>{s}</p>
+                  ))}
+                </div>
+                <div style={{ borderRadius: '10px', padding: '14px 16px', backgroundColor: '#272729' }}>
+                  <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginBottom: '6px', fontWeight: 500 }}>Risk Level</p>
+                  {report.riskLevel.split('|').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                    <p key={i} style={{ fontSize: i === 0 ? '13px' : '12px', fontWeight: 700, color: i === 0 ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.45)', marginTop: i === 0 ? 0 : '3px' }}>{s}</p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Levels */}
+              <div style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729', marginBottom: '16px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '12px' }}>Price Levels</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '10px' }}>
+                  {[
+                    { label: 'Support 1', value: report.supportLevelPrimary, color: '#34c759' },
+                    { label: 'Support 2', value: report.supportLevelSecondary, color: '#30d158' },
+                    { label: 'Resistance 1', value: report.resistanceLevelPrimary, color: '#ff453a' },
+                    { label: 'Resistance 2', value: report.resistanceLevelSecondary, color: '#ff6961' },
+                  ].map(({ label, value, color }) => (
+                    <div key={label} style={{ textAlign: 'center' }}>
+                      <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', marginBottom: '4px' }}>{label}</p>
+                      <p style={{ fontSize: '15px', fontWeight: 700, color, fontFamily: 'monospace' }}>${value.toFixed(2)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Summary */}
+              <div style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729', marginBottom: '12px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '8px' }}>Summary</p>
+                {report.summaryConclusion.split('|').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                  <p key={i} style={{ fontSize: '13px', lineHeight: 1.6, color: i === 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', marginTop: i === 0 ? 0 : '8px' }}>{s}</p>
+                ))}
+              </div>
+
+              {/* Volume & Price Action */}
+              {[
+                { title: 'Volume Observation', text: report.volumeObservation },
+                { title: 'Price Action', text: report.priceActionObservation },
+              ].map(({ title, text }) => (
+                <div key={title} style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729', marginBottom: '12px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '8px' }}>{title}</p>
+                  {text.split('|').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                    <p key={i} style={{ fontSize: '13px', lineHeight: 1.6, color: i === 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', marginTop: i === 0 ? 0 : '8px' }}>{s}</p>
+                  ))}
+                </div>
+              ))}
+
+              {/* Detailed Analysis */}
+              <div style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '8px' }}>Detailed Analysis</p>
+                {report.detailedAnalysis.split('\n\n').map(s => s.trim()).filter(Boolean).map((s, i) => (
+                  <p key={i} style={{ fontSize: '13px', lineHeight: 1.7, color: i % 2 === 0 ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)', marginTop: i === 0 ? 0 : '12px', whiteSpace: 'pre-line' }}>{s}</p>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────────────────────
 export default function Dashboard() {
   const navigate = useNavigate()
   const [argoApps, setArgoApps] = useState<ArgoApp[]>([])
   const [argoLoading, setArgoLoading] = useState(true)
   const [argoError, setArgoError] = useState<string | null>(null)
+  const [tslaModalOpen, setTslaModalOpen] = useState(false)
+  const [tslaReport, setTslaReport] = useState<TslaReport | null>(null)
+  const [tslaLoading, setTslaLoading] = useState(false)
+  const [tslaError, setTslaError] = useState<string | null>(null)
+  const [tslaGenerating, setTslaGenerating] = useState(false)
+
+  const fetchLatestTslaReport = () => {
+    setTslaLoading(true)
+    setTslaError(null)
+    fetch('https://api-dev.xuyang.dev/xg-tsla-svc/report/getLatest')
+      .then((res) => res.json())
+      .then((data) => { setTslaReport(data); setTslaLoading(false) })
+      .catch((err) => { setTslaError(err.message); setTslaLoading(false) })
+  }
+
+  const openTslaReport = () => {
+    setTslaModalOpen(true)
+    if (tslaReport) return
+    fetchLatestTslaReport()
+  }
+
+  const generateTslaReport = () => {
+    setTslaGenerating(true)
+    setTslaReport(null)
+    fetch('https://api-dev.xuyang.dev/xg-tsla-svc/report/generateNew', { method: 'POST' })
+      .then(() => fetchLatestTslaReport())
+      .catch((err) => { setTslaError(err.message); setTslaLoading(false) })
+      .finally(() => setTslaGenerating(false))
+  }
 
   const fetchArgoApps = () => {
     setArgoLoading(true)
@@ -226,6 +423,16 @@ export default function Dashboard() {
 
   return (
     <div style={{ fontFamily: FONT }}>
+      {tslaModalOpen && (
+        <TslaReportModal
+          onClose={() => setTslaModalOpen(false)}
+          report={tslaReport}
+          loading={tslaLoading}
+          error={tslaError}
+          generating={tslaGenerating}
+          onGenerate={generateTslaReport}
+        />
+      )}
 
       {/* ── Sticky Glass Nav ── */}
       <header style={NAV}>
@@ -489,7 +696,12 @@ export default function Dashboard() {
                   <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: colors.tesla, flexShrink: 0 }}>T</div>
                   <div>
                     <p style={{ fontSize: '17px', fontWeight: 700, color: NEAR_BLACK, letterSpacing: '-0.374px', marginBottom: '3px' }}>Tesla Stock Analysis</p>
-                    <p style={{ fontSize: '12px', fontFamily: 'monospace', color: BLUE, marginBottom: '5px' }}>xg-tsla-svc</p>
+                    <button
+                      onClick={openTslaReport}
+                      style={{ fontSize: '12px', fontFamily: 'monospace', color: BLUE, marginBottom: '5px', display: 'block', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                    >xg-tsla-svc ↗</button>
                     <p style={{ fontSize: '14px', color: 'rgba(0,0,0,0.5)', letterSpacing: '-0.224px' }}>
                       AI-powered TSLA analysis — trend detection, sentiment analysis, and price prediction.
                     </p>
