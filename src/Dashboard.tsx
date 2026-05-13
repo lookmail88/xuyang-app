@@ -247,11 +247,8 @@ function TslaReportModal({ onClose, report, loading, error, generating, onGenera
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: colors.tesla, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '14px', color: '#fff' }}>T</div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>TSLA Latest Report</p>
-                {version && <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.35)' }}>{version}</span>}
-              </div>
-              {report && !generating && <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}>{new Date(report.reportTimestamp).toLocaleString()}</p>}
+              <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>TSLA Latest Report</p>
+              {version && <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.35)' }}>{version}</span>}
               {generating && <p style={{ fontSize: '11px', color: 'rgba(255,165,0,0.7)', fontFamily: 'monospace' }}>Generating new report…</p>}
             </div>
           </div>
@@ -272,7 +269,7 @@ function TslaReportModal({ onClose, report, loading, error, generating, onGenera
               <svg className={generating ? 'animate-spin' : ''} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              {generating ? 'Generating…' : 'Generate New'}
+              {generating ? 'Generating…' : 'Refresh'}
             </button>
             <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', color: '#ffffff', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>×</button>
           </div>
@@ -293,6 +290,9 @@ function TslaReportModal({ onClose, report, loading, error, generating, onGenera
 
           {report && !loading && !generating && (
             <>
+              {/* Report Created */}
+              <p style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', marginBottom: '16px' }}>Report Created: {new Date(report.reportTimestamp).toLocaleString()}</p>
+
               {/* Sentiment + Risk */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
                 <div style={{ borderRadius: '10px', padding: '14px 16px', backgroundColor: '#272729' }}>
@@ -349,7 +349,7 @@ function TslaReportModal({ onClose, report, loading, error, generating, onGenera
               ))}
 
               {/* Detailed Analysis */}
-              <div style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729' }}>
+              <div style={{ borderRadius: '10px', padding: '16px', backgroundColor: '#272729', marginBottom: '12px' }}>
                 <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '8px' }}>Detailed Analysis</p>
                 {report.detailedAnalysis.split('\n\n').map(s => s.trim()).filter(Boolean).map((s, i) => (
                   <p key={i} style={{ fontSize: '13px', lineHeight: 1.7, color: i % 2 === 0 ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)', marginTop: i === 0 ? 0 : '12px', whiteSpace: 'pre-line' }}>{s}</p>
@@ -708,18 +708,15 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                   <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: colors.tesla, flexShrink: 0 }}>T</div>
                   <div>
-                    <p style={{ fontSize: '17px', fontWeight: 700, color: NEAR_BLACK, letterSpacing: '-0.374px', marginBottom: '3px' }}>Tesla Stock Analysis</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
-                      <button
-                        onClick={openTslaReport}
-                        style={{ fontSize: '12px', fontFamily: 'monospace', color: BLUE, display: 'block', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                      >xg-tsla-svc ↗</button>
-                      {tslaVersion && (
-                        <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(0,0,0,0.35)' }}>{tslaVersion}</span>
-                      )}
-                    </div>
+                    <button
+                      onClick={openTslaReport}
+                      style={{ fontSize: '17px', fontWeight: 700, color: NEAR_BLACK, letterSpacing: '-0.374px', marginBottom: '3px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                    >Tesla Stock Analysis ↗</button>
+                    {tslaVersion && (
+                      <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(0,0,0,0.35)', display: 'block', marginBottom: '5px' }}>{tslaVersion}</span>
+                    )}
                     <p style={{ fontSize: '14px', color: 'rgba(0,0,0,0.5)', letterSpacing: '-0.224px' }}>
                       AI-powered TSLA analysis — trend detection, sentiment analysis, and price prediction.
                     </p>
