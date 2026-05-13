@@ -705,8 +705,8 @@ export default function Dashboard() {
             <div style={{ height: '3px', backgroundColor: BLUE }} />
             <div style={{ padding: '28px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: colors.tesla, flexShrink: 0 }}>T</div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: colors.tesla, flexShrink: 0, marginTop: '2px' }}>T</div>
                   <div>
                     <button
                       onClick={openTslaReport}
