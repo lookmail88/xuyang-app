@@ -209,13 +209,14 @@ interface TslaReport {
 }
 
 // ── TSLA Report Modal ─────────────────────────────────────────────
-function TslaReportModal({ onClose, report, loading, error, generating, onGenerate }: {
+function TslaReportModal({ onClose, report, loading, error, generating, onGenerate, version }: {
   onClose: () => void
   report: TslaReport | null
   loading: boolean
   error: string | null
   generating: boolean
   onGenerate: () => void
+  version: string | null
 }) {
   const bullish = report?.trendSentiment?.toLowerCase().includes('bullish')
   const sentimentColor = bullish ? '#34c759' : '#ff453a'
@@ -246,7 +247,10 @@ function TslaReportModal({ onClose, report, loading, error, generating, onGenera
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: colors.tesla, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '14px', color: '#fff' }}>T</div>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>TSLA Latest Report</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <p style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>TSLA Latest Report</p>
+                {version && <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(255,255,255,0.35)' }}>{version}</span>}
+              </div>
               {report && !generating && <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}>{new Date(report.reportTimestamp).toLocaleString()}</p>}
               {generating && <p style={{ fontSize: '11px', color: 'rgba(255,165,0,0.7)', fontFamily: 'monospace' }}>Generating new report…</p>}
             </div>
@@ -370,6 +374,14 @@ export default function Dashboard() {
   const [tslaLoading, setTslaLoading] = useState(false)
   const [tslaError, setTslaError] = useState<string | null>(null)
   const [tslaGenerating, setTslaGenerating] = useState(false)
+  const [tslaVersion, setTslaVersion] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('https://api-dev.xuyang.dev/xg-tsla-svc/version')
+      .then((res) => res.text())
+      .then((data) => setTslaVersion(data.trim()))
+      .catch(() => {})
+  }, [])
 
   const fetchLatestTslaReport = () => {
     setTslaLoading(true)
@@ -431,6 +443,7 @@ export default function Dashboard() {
           error={tslaError}
           generating={tslaGenerating}
           onGenerate={generateTslaReport}
+          version={tslaVersion}
         />
       )}
 
@@ -696,12 +709,17 @@ export default function Dashboard() {
                   <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: colors.tesla, flexShrink: 0 }}>T</div>
                   <div>
                     <p style={{ fontSize: '17px', fontWeight: 700, color: NEAR_BLACK, letterSpacing: '-0.374px', marginBottom: '3px' }}>Tesla Stock Analysis</p>
-                    <button
-                      onClick={openTslaReport}
-                      style={{ fontSize: '12px', fontFamily: 'monospace', color: BLUE, marginBottom: '5px', display: 'block', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
-                      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                    >xg-tsla-svc ↗</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
+                      <button
+                        onClick={openTslaReport}
+                        style={{ fontSize: '12px', fontFamily: 'monospace', color: BLUE, display: 'block', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                      >xg-tsla-svc ↗</button>
+                      {tslaVersion && (
+                        <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'rgba(0,0,0,0.35)' }}>{tslaVersion}</span>
+                      )}
+                    </div>
                     <p style={{ fontSize: '14px', color: 'rgba(0,0,0,0.5)', letterSpacing: '-0.224px' }}>
                       AI-powered TSLA analysis — trend detection, sentiment analysis, and price prediction.
                     </p>
