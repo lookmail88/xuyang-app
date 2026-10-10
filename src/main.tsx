@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import Dashboard from './Dashboard.tsx'
+import Owner from './Owner.tsx'
 import { loadConfig } from './config'
 
 loadConfig().then(() => {
@@ -13,6 +14,7 @@ loadConfig().then(() => {
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/owner" element={<Owner />} />
         </Routes>
       </BrowserRouter>
     </StrictMode>,

@@ -107,7 +107,7 @@ function App() {
           {[
             { label: 'Xigi', href: '#' },
             { label: 'GitHub', href: 'https://github.com/lookmail88/xuyang-app', external: true },
-            { label: 'Contact', href: '#' },
+            { label: 'Owner', href: '/owner' },
           ].map(({ label, href, external }) => (
             <a
               key={label}
