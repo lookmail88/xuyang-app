@@ -54,8 +54,8 @@ export default function Owner() {
         }}
       >
         <img
-          src=/owner-avatar.jpg
-          alt=Xuyang Gao
+          src="/owner-avatar.jpg"
+          alt="Xuyang Gao"
           style={{
             width: '120px',
             height: '120px',
