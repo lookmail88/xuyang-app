@@ -144,41 +144,166 @@ export default function Owner() {
         </div>
       </section>
 
-      {/* ── Cards ── */}
+            {/* ── Cards ── */}
       <section style={{ padding: '0 24px 80px', backgroundColor: LIGHT }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {[
-            {
-              title: 'About',
-              body: 'With over 20 years of experience in Java development, I bring deep expertise in enterprise software, the Spring ecosystem, and large-scale data processing. Currently at MedImpact Healthcare Systems in San Diego, working on mission-critical healthcare technology.',
-            },
-            {
-              title: 'What I Do',
-              body: 'Enterprise Java & Spring Boot backends, Spring Batch data pipelines, legacy system modernization, and homelab infrastructure with Kubernetes, ArgoCD, and local AI/ML workloads.',
-            },
-            {
-              title: 'Education',
-              body: 'East China University of Science and Technology, Shanghai, China (1995 – 1997; 1999 – 2002).',
-            },
-          ].map((card) => (
+          {/* About */}
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '0',
+              marginBottom: '20px',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+              overflow: 'hidden',
+            }}
+          >
             <div
-              key={card.title}
               style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '16px',
-                padding: '32px',
-                marginBottom: '16px',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+                height: '6px',
+                background: 'linear-gradient(90deg, #0071e3, #42a5f5)',
               }}
-            >
-              <h2 style={{ fontSize: '22px', fontWeight: 600, color: NEAR_BLACK, marginBottom: '12px' }}>
-                {card.title}
-              </h2>
-              <p style={{ fontSize: '16px', lineHeight: 1.7, color: 'rgba(0,0,0,0.65)' }}>{card.body}</p>
+            />
+            <div style={{ padding: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '28px' }}>👨‍💻</span>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, color: NEAR_BLACK, margin: 0 }}>
+                  About
+                </h2>
+              </div>
+              <p style={{ fontSize: '17px', lineHeight: 1.75, color: 'rgba(0,0,0,0.7)', margin: 0 }}>
+                With over <strong>20 years</strong> of experience in Java development, I bring
+                deep expertise in enterprise software, the Spring ecosystem, and large-scale
+                data processing. Currently at{' '}
+                <strong>MedImpact Healthcare Systems</strong> in San Diego, working on
+                mission-critical healthcare technology serving millions.
+              </p>
             </div>
-          ))}
+          </div>
+
+          {/* What I Do */}
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '0',
+              marginBottom: '20px',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                height: '6px',
+                background: 'linear-gradient(90deg, #16a34a, #4ade80)',
+              }}
+            />
+            <div style={{ padding: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                <span style={{ fontSize: '28px' }}>🚀</span>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, color: NEAR_BLACK, margin: 0 }}>
+                  What I Do
+                </h2>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {[
+                  'Enterprise Java',
+                  'Spring Boot',
+                  'Spring Batch',
+                  'Microservices',
+                  'Kubernetes',
+                  'ArgoCD',
+                  'PostgreSQL',
+                  'Ollama / AI',
+                  'Legacy Modernization',
+                  'Homelab Infra',
+                ].map((skill) => (
+                  <span
+                    key={skill}
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      padding: '8px 16px',
+                      borderRadius: '980px',
+                      backgroundColor: LIGHT,
+                      color: NEAR_BLACK,
+                      border: '1px solid rgba(0,0,0,0.06)',
+                    }}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Education */}
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '0',
+              marginBottom: '20px',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                height: '6px',
+                background: 'linear-gradient(90deg, #7c3aed, #a78bfa)',
+              }}
+            />
+            <div style={{ padding: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                <span style={{ fontSize: '28px' }}>🎓</span>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, color: NEAR_BLACK, margin: 0 }}>
+                  Education
+                </h2>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[
+                  { period: '1999 – 2002', school: 'East China University of Science and Technology', loc: 'Shanghai, China' },
+                  { period: '1995 – 1997', school: 'East China University of Science and Technology', loc: 'Shanghai, China' },
+                ].map((edu) => (
+                  <div
+                    key={edu.period}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px',
+                      padding: '16px 20px',
+                      borderRadius: '12px',
+                      backgroundColor: LIGHT,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        color: '#ffffff',
+                        backgroundColor: '#7c3aed',
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {edu.period}
+                    </span>
+                    <div>
+                      <div style={{ fontSize: '15px', fontWeight: 600, color: NEAR_BLACK }}>
+                        {edu.school}
+                      </div>
+                      <div style={{ fontSize: '13px', color: 'rgba(0,0,0,0.45)' }}>{edu.loc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
 
       {/* ── Footer ── */}
       <footer
