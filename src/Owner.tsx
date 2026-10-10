@@ -53,23 +53,18 @@ export default function Owner() {
           textAlign: 'center',
         }}
       >
-        <div
+        <img
+          src=/owner-avatar.jpg
+          alt=Xuyang Gao
           style={{
             width: '120px',
             height: '120px',
             borderRadius: '50%',
-            backgroundColor: BLUE,
-            color: '#ffffff',
-            fontSize: '48px',
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            objectFit: 'cover',
             margin: '0 auto 24px',
+            display: 'block',
           }}
-        >
-          XG
-        </div>
+        />
         <h1
           style={{
             fontSize: 'clamp(36px, 6vw, 56px)',
