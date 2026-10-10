@@ -124,7 +124,7 @@ export default function Owner() {
           {[
             { num: '20+', label: 'Years in Java' },
             { num: '754', label: 'LinkedIn Followers' },
-            { num: '3', label: 'Active Projects' },
+            { num: '1M+', label: 'Lines of Code' },
           ].map((s) => (
             <div
               key={s.label}
