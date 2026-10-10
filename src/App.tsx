@@ -432,6 +432,125 @@ function App() {
         </div>
       </section>
 
+      {/* ══ SECTION 3 — Retax ══ */}
+      <section
+        style={{
+          scrollSnapAlign: 'start',
+          minHeight: 'calc(100vh - 48px)',
+          backgroundColor: LIGHT,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '80px 24px',
+        }}
+      >
+        <div style={{ maxWidth: '800px', textAlign: 'center' }}>
+          <div
+            style={{
+              display: 'inline-block',
+              fontSize: '12px',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: BLUE,
+              marginBottom: '16px',
+              padding: '6px 16px',
+              borderRadius: '980px',
+              backgroundColor: 'rgba(0,113,227,0.1)',
+            }}
+          >
+            Coming Soon
+          </div>
+          <h2
+            style={{
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              fontWeight: 600,
+              lineHeight: 1.1,
+              letterSpacing: '-0.28px',
+              color: NEAR_BLACK,
+              marginBottom: '18px',
+            }}
+          >
+            Retax
+          </h2>
+          <p
+            style={{
+              fontSize: '21px',
+              fontWeight: 400,
+              lineHeight: 1.4,
+              color: 'rgba(0,0,0,0.6)',
+              marginBottom: '32px',
+            }}
+          >
+            Snap your receipts. AI sorts them. Tax draft ready.
+          </p>
+          <p
+            style={{
+              fontSize: '17px',
+              lineHeight: 1.6,
+              color: 'rgba(0,0,0,0.5)',
+              maxWidth: '640px',
+              margin: '0 auto 40px',
+            }}
+          >
+            Retax is a personal tax document generator. Photograph everyday
+            receipts, W-2s, and 1099s — on-device AI extracts merchants,
+            amounts, and tax categories, then builds an IRS-ready draft and
+            annual document package. You file with TurboTax or hand the
+            package to your CPA.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              gap: '24px',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              marginBottom: '40px',
+            }}
+          >
+            {[
+              { price: 'Free', desc: 'Up to 20 files' },
+              { price: '$9.99', desc: '21 – 100 files' },
+              { price: '$19.99', desc: '100+ files' },
+            ].map((tier) => (
+              <div
+                key={tier.price}
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '16px',
+                  padding: '24px 32px',
+                  minWidth: '160px',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                }}
+              >
+                <div style={{ fontSize: '28px', fontWeight: 700, color: NEAR_BLACK }}>
+                  {tier.price}
+                </div>
+                <div style={{ fontSize: '14px', color: 'rgba(0,0,0,0.5)', marginTop: '8px' }}>
+                  {tier.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+          <a
+            href="https://retax.xuyang.dev"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: 'inline-block',
+              backgroundColor: BLUE,
+              color: '#ffffff',
+              padding: '12px 32px',
+              borderRadius: '980px',
+              fontSize: '17px',
+              textDecoration: 'none',
+            }}
+          >
+            Learn more
+          </a>
+        </div>
+      </section>
+
       {/* ══ Footer (continues dark) ══ */}
       <footer
         style={{
