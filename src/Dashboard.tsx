@@ -753,9 +753,58 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Retax */}
+          <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#ffffff', boxShadow: 'rgba(0,0,0,0.10) 0px 2px 16px', marginBottom: '16px' }}>
+            <div style={{ height: '3px', backgroundColor: '#16a34a' }} />
+            <div style={{ padding: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '16px', color: '#ffffff', backgroundColor: '#16a34a', flexShrink: 0, marginTop: '2px' }}>R</div>
+                  <div>
+                    <a
+                      href="https://retax.xuyang.dev"
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ fontSize: '17px', fontWeight: 700, color: NEAR_BLACK, letterSpacing: '-0.374px', marginBottom: '3px', textDecoration: 'none' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                    >Retax ↗</a>
+                    <p style={{ fontSize: '14px', color: 'rgba(0,0,0,0.5)', letterSpacing: '-0.224px' }}>
+                      Personal tax document generator — snap receipts, AI categorizes, tax draft ready.
+                    </p>
+                  </div>
+                </div>
+                <span style={{ fontSize: '12px', padding: '4px 12px', borderRadius: '980px', backgroundColor: 'rgba(22,163,74,0.10)', color: '#16a34a', fontWeight: 500, flexShrink: 0 }}>In Dev</span>
+              </div>
+
+              <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: '10px' }}>Stack</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '8px', marginBottom: '20px' }}>
+                {[
+                  { icon: '📱', label: 'iOS Client' },
+                  { icon: '☕', label: 'Spring Boot' },
+                  { icon: '🤖', label: 'Ollama AI' },
+                  { icon: '🐘', label: 'PostgreSQL' },
+                ].map((mod) => (
+                  <div key={mod.label} style={{ display: 'flex', alignItems: 'center', gap: '7px', borderRadius: '8px', padding: '9px 10px', backgroundColor: LIGHT }}>
+                    <span style={{ fontSize: '14px', flexShrink: 0 }}>{mod.icon}</span>
+                    <p style={{ fontSize: '11px', fontWeight: 500, color: NEAR_BLACK }}>{mod.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {['Free ≤20', '$9.99 ≤100', '$19.99 100+'].map((tag) => (
+                  <span key={tag} style={{ fontSize: '12px', padding: '4px 12px', borderRadius: '980px', backgroundColor: LIGHT, color: 'rgba(0,0,0,0.6)' }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Placeholder cards */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            {[1, 2].map((i) => (
+            {[1].map((i) => (
               <div
                 key={i}
                 style={{
