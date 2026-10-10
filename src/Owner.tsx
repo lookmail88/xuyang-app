@@ -158,7 +158,7 @@ export default function Owner() {
             },
             {
               title: 'Education',
-              body: 'East China University of Science and Technology, Shanghai, China (1992 – 1995; 1995 – 1997).',
+              body: 'East China University of Science and Technology, Shanghai, China (1995 – 1997; 1999 – 2002).',
             },
           ].map((card) => (
             <div
