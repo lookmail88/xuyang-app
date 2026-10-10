@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 
 const FONT = '-apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif'
 const BLUE = '#0071e3'
-const NEAR_BLACK = '#1d1d1f'
 
 const NAV: React.CSSProperties = {
   position: 'sticky',
