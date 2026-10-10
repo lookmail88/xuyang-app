@@ -1,17 +1,1 @@
-# 第一阶段：编译 (build)
-FROM docker.io/library/node:20-alpine as build
-LABEL authors="xgao"
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# 第二阶段：运行 (runtime) - 补上这一段 🚀
-FROM docker.io/library/nginx:stable-alpine
-# 将第一阶段生成的 dist 文件夹拷贝到 nginx 的默认静态目录
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+IyDnrKzkuIDpmLbmrrXvvJrnvJbor5EgKGJ1aWxkKQojIFZpdGUgOCByZXF1aXJlcyBOb2RlLmpzIDIwLjE5KyBvciAyMi4xMis7IHVzZSBOb2RlIDIyIExUUwpGUk9NIGRvY2tlci5pby9saWJyYXJ5L25vZGU6MjItYWxwaW5lIGFzIGJ1aWxkCkxBQkVMIGF1dGhvcnM9InhnYW8iCgpXT1JLRElSIC9hcHAKQ09QWSBwYWNrYWdlKi5qc29uIC4vClJVTiBucG0gaW5zdGFsbApDT1BZIC4gLgpSVU4gbnBtIHJ1biBidWlsZAoKIyDnrKzkuozpmLbmrrXvvJrov5DooYwgKHJ1bnRpbWUpIC0g6KGl5LiK6L+Z5LiA5q61IPCfmoAKRlJPTSBkb2NrZXIuaW8vbGlicmFyeS9uZ2lueDpzdGFibGUtYWxwaW5lCiMg5bCG56ys5LiA6Zi25q6155Sf5oiQ55qEIGRpc3Qg5paH5Lu25aS55ou36LSd5YiwIG5naW54IOeahOm7mOiupOmdmeaAgeebruW9lQpDT1BZIC0tZnJvbT1idWlsZCAvYXBwL2Rpc3QgL3Vzci9zaGFyZS9uZ2lueC9odG1sCkNPUFkgbmdpbnguY29uZiAvZXRjL25naW54L2NvbmYuZC9kZWZhdWx0LmNvbmYKRVhQT1NFIDgwCkNNRCBbIm5naW54IiwgIi1nIiwgImRhZW1vbiBvZmY7Il0=
